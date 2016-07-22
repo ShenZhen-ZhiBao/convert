@@ -10,6 +10,7 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
-Route::post('/html2Pdf', 'ConvertController@Html2Pdf');
-Route::post('/html2Word', 'ConvertController@Html2Word');
+Route::group(['middleware'=>'auth'],function (){
+    Route::post('/html2Pdf', 'ConvertController@Html2Pdf');
+    Route::post('/html2Word', 'ConvertController@Html2Word');
+});

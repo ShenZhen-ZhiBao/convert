@@ -66,7 +66,7 @@ class ConvertController extends Controller
     private function uploadFile(Request $request)
     {
         $file = $request->file('file');
-        if($file->getMimeType() != 'text/html') {
+        if(is_null($file) || $file->getMimeType() != 'text/html') {
             return false;
         }
         $name = md5(rand(1,time())).'_'.$file->getClientOriginalName();
