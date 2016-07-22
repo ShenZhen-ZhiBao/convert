@@ -18,10 +18,10 @@ class ConvertController extends Controller
         $name = $file->getClientOriginalName();
         $file->move(APP_TEMPFILE_OUTPUT_PATH,$name);
 
-
-        $cmd = '/home/kang/Downloads/wkhtmltox/bin/wkhtmltopdf '.APP_TEMPFILE_OUTPUT_PATH.'/'.$name.' '.APP_TEMPFILE_OUTPUT_PATH.'/'.$name.'.pdf';
-        $out = shell_exec($cmd);
-        return self::$response->success(['data'=>$out]);
+        $pdf = APP_TEMPFILE_OUTPUT_PATH.'/'.$name.'.pdf';
+        $cmd = '/home/kang/Downloads/wkhtmltox/bin/wkhtmltopdf '.APP_TEMPFILE_OUTPUT_PATH.'/'.$name.' '.$pdf;
+        shell_exec($cmd);
+        return file_get_contents($pdf);
     }
 
 
