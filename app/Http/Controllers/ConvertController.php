@@ -8,23 +8,70 @@ use App\Http\Requests;
 class ConvertController extends Controller
 {
 
+    /**
+     * html转换为 pdf
+     *
+     * @param Request $request
+     * @return array|string
+     */
     public function Html2Pdf(Request $request)
     {
-        $file = $request->file('file');
-        if($file->getMimeType() != 'text/html')
-        {
+        $name = $this->uploadFile($request);
+        if(!$name){
             return self::$response->error(CODE_C_UPLOAD_FILE_TYPE_ERR);
         }
-        $name = $file->getClientOriginalName();
-        $file->move(APP_TEMPFILE_OUTPUT_PATH,$name);
 
-        $pdf = APP_TEMPFILE_OUTPUT_PATH.'/'.$name.'.pdf';
-        $cmd = '/home/kang/Downloads/wkhtmltox/bin/wkhtmltopdf '.APP_TEMPFILE_OUTPUT_PATH.'/'.$name.' '.$pdf;
+        $upload_html = APP_TEMPFILE_OUTPUT_PATH.'/'.$name;
+        $out_pdf = APP_TEMPFILE_OUTPUT_PATH.'/'.$name.'.pdf';
+        $command = config('common.wkhtmltopdf');
+        //todo 检查是否存在,执行权限
+
+        $cmd = $command.' '.$upload_html.' '.$out_pdf;
         shell_exec($cmd);
-        return file_get_contents($pdf);
+        $pdf_content = file_get_contents($out_pdf);
+        unlink($upload_html);
+        unlink($out_pdf);
+        return $pdf_content;
+    }
+
+    /**
+     * html转换为 docx的 word 文件
+     *
+     * @param Request $request
+     * @return array|string
+     */
+    public function Html2Word(Request $request)
+    {
+        $name = $this->uploadFile($request);
+        if(!$name){
+            return self::$response->error(CODE_C_UPLOAD_FILE_TYPE_ERR);
+        }
+
+        $upload_html = APP_TEMPFILE_OUTPUT_PATH.'/'.$name;
+        $out_docx = APP_TEMPFILE_OUTPUT_PATH.'/'.$name.'.docx';
+        $command = config('common.pandoc');
+        //todo 检查是否存在,执行权限
+
+        $cmd = $command.' -f html -t docx -o '.$out_docx.' '.$upload_html;
+        shell_exec($cmd);
+        $docx_content = file_get_contents($out_docx);
+        unlink($upload_html);
+        unlink($out_docx);
+        return $docx_content;
     }
 
 
 
+    /*********非接口了︿(￣︶￣)︿**********/
+    private function uploadFile(Request $request)
+    {
+        $file = $request->file('file');
+        if($file->getMimeType() != 'text/html') {
+            return false;
+        }
+        $name = md5(rand(1,time())).'_'.$file->getClientOriginalName();
+        $file->move(APP_TEMPFILE_OUTPUT_PATH,$name);
+        return $name;
+    }
 
 }

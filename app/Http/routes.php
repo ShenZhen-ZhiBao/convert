@@ -12,3 +12,4 @@
 */
 
 Route::post('/html2Pdf', 'ConvertController@Html2Pdf');
+Route::post('/html2Word', 'ConvertController@Html2Word');
