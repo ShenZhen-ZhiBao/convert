@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Log;
 
 class ConvertController extends Controller
 {
@@ -24,7 +25,11 @@ class ConvertController extends Controller
         $upload_html = APP_TEMPFILE_OUTPUT_PATH.'/'.$name;
         $out_pdf = APP_TEMPFILE_OUTPUT_PATH.'/'.$name.'.pdf';
         $command = config('common.wkhtmltopdf');
-        //todo 检查是否存在,执行权限
+        //检查是否存在,执行权限
+        if(!is_executable($command)){
+            Log::warning($command." 没有权限执行");
+            return self::$response->error(CODE_B_COMMAND_EXEC_ERR);
+        }
 
         $cmd = $command.' '.$upload_html.' '.$out_pdf;
         shell_exec($cmd);
@@ -50,7 +55,11 @@ class ConvertController extends Controller
         $upload_html = APP_TEMPFILE_OUTPUT_PATH.'/'.$name;
         $out_docx = APP_TEMPFILE_OUTPUT_PATH.'/'.$name.'.docx';
         $command = config('common.pandoc');
-        //todo 检查是否存在,执行权限
+        //检查是否存在,执行权限
+        if(!is_executable($command)){
+            Log::warning($command." 没有权限执行");
+            return self::$response->error(CODE_B_COMMAND_EXEC_ERR);
+        }
 
         $cmd = $command.' -f html -t docx -o '.$out_docx.' '.$upload_html;
         shell_exec($cmd);

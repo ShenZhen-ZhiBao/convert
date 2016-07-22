@@ -18,6 +18,7 @@ return [
     CODE_B_STU_EXAM_UPDATE_FAIL  => 'student_exam表更新失败',
     CODE_B_EXAM_UPDATE_FAIL => 'exam表更新失败',
     CODE_B_DB_UPDATE_FAIL => '数据库更新失败',
+    CODE_B_COMMAND_EXEC_ERR =>  '命令没有权限执行',
 
     CODE_C_UPLOAD_FILE_TYPE_ERR =>   '上传的文件类型错误',
 ];

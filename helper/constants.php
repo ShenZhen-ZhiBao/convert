@@ -24,6 +24,7 @@ define('CODE_B_ACCOUNT_EXIST',10101);
 define('CODE_B_ACCOUNT_PASSWORD_ERR',10102);
 define('CODE_B_DB_INSERT_FAIL',10201); // 数据库插入失败
 define('CODE_B_DB_UPDATE_FAIL',10201); // 数据库更新失败
+define('CODE_B_COMMAND_EXEC_ERR',10202);
 
 //转换错误提示
 define('CODE_C_UPLOAD_FILE_TYPE_ERR',20000);
